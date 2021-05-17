@@ -1,0 +1,25 @@
+{
+  "name": "schedule-employee",
+  "version": "1.0.0",
+  "description": "Schedule Emp",
+  "scripts": {
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch"
+  },
+  "author": "Nam Le",
+  "license": "MIT",
+  "devDependencies": {
+    "@grafana/data": "next",
+    "@grafana/toolkit": "next",
+    "@grafana/ui": "^7.2.2",
+    "tslib": "^2.1.0"
+  },
+  "dependencies": {
+    "@nivo/core": "^0.63.0",
+    "@nivo/heatmap": "^0.63.0",
+    "date-fns": "^2.16.1",
+    "date-fns-tz": "^1.0.10"
+  }
+}
