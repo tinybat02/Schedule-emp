@@ -42,8 +42,8 @@ export const process = (
     const hour = format(zonedDate, 'HH', { timeZone });
 
     if (dayOfWeek !== 'Sun' && hours.includes(hour)) {
-      const ratio = Math.ceil(customersSerie.fields[0].values.buffer[idx] / empRatio);
-      console.log('hour ', hour, ' ratio ', ratio);
+      const ratio = Math.floor(customersSerie.fields[0].values.buffer[idx] / empRatio);
+      console.log('hour ', hour, ' cus ', customersSerie.fields[0].values.buffer[idx], ' cus/ratio ', ratio);
       const bound = ratio > employee ? employee : ratio;
       for (let j = 0; j < bound; j++) {
         template[employee - 1 - j][hour] = 10;

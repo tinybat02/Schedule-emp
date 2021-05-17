@@ -48256,8 +48256,8 @@ var process = function process(customersSerie, employee, open_hour, close_hour, 
     });
 
     if (dayOfWeek !== 'Sun' && hours.includes(hour)) {
-      var ratio = Math.ceil(customersSerie.fields[0].values.buffer[idx] / empRatio);
-      console.log('hour ', hour, ' ratio ', ratio);
+      var ratio = Math.floor(customersSerie.fields[0].values.buffer[idx] / empRatio);
+      console.log('hour ', hour, ' cus ', customersSerie.fields[0].values.buffer[idx], ' cus/ratio ', ratio);
       var bound = ratio > employee ? employee : ratio;
 
       for (var j = 0; j < bound; j++) {
