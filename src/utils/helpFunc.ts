@@ -38,12 +38,11 @@ export const process = (
     const hour = format(zonedDate, 'HH', { timeZone });
 
     if (dayOfWeek !== 'Sun' && hours.includes(hour)) {
-      const ratio = Math.floor(customersSerie.fields[0].values.buffer[idx] / employee);
+      const ratio = Math.floor(customersSerie.fields[0].values.buffer[idx] / 5);
       console.log('hour ', hour, ' ratio ', ratio);
       const bound = ratio > employee ? employee - 1 : ratio;
       for (let j = 0; j < bound; j++) {
-        if (j < 5) template[employee - 1 - j][hour] = 10;
-        else template[employee - 1 - j][hour] = 20;
+        template[employee - 1 - j][hour] = 10;
       }
     }
   });
