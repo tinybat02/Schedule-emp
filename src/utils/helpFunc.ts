@@ -45,8 +45,14 @@ export const process = (
       const ratio = Math.floor(customersSerie.fields[0].values.buffer[idx] / empRatio);
       console.log('hour ', hour, ' cus ', customersSerie.fields[0].values.buffer[idx], ' cus/ratio ', ratio);
       const bound = ratio > employee ? employee : ratio;
+      console.log('bound ', bound);
       for (let j = 0; j < bound; j++) {
         template[employee - 1 - j][hour] = 10;
+      }
+
+      const topbound = employee - bound;
+      for (let k = 0; k < topbound; k++) {
+        template[k][hour] = 5;
       }
     }
   });

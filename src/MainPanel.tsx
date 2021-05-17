@@ -103,7 +103,7 @@ export class MainPanel extends PureComponent<Props> {
           cellOpacity={0.7}
           cellBorderColor={{ from: 'color', modifiers: [['darker', 0.4]] }}
           labelTextColor={{ from: 'color', modifiers: [['darker', 1.8]] }}
-          colors="blues"
+          colors="nivo"
           enableLabels={false}
           isInteractive={false}
           // @ts-ignore
