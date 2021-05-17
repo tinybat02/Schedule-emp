@@ -38,8 +38,8 @@ export class MainPanel extends PureComponent<Props> {
     if (prevProps.data.series !== this.props.data.series) {
       const series = this.props.data.series as Frame[];
 
+      this.setState({ data: null, keys: [] });
       if (series.length == 0) {
-        this.setState({ data: null, keys: [] });
         return;
       }
 
@@ -53,7 +53,9 @@ export class MainPanel extends PureComponent<Props> {
       const { timezone, open_hour, close_hour } = this.props.options;
 
       const { data, keys } = process(customersSerie, nb_employee, open_hour, close_hour, timezone);
-      this.setState({ data, keys });
+      setTimeout(() => {
+        this.setState({ data, keys });
+      }, 500);
     }
   }
 

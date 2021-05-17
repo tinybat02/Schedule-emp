@@ -48027,14 +48027,16 @@ function (_super) {
   };
 
   MainPanel.prototype.componentDidUpdate = function (prevProps) {
+    var _this = this;
+
     if (prevProps.data.series !== this.props.data.series) {
       var series = this.props.data.series;
+      this.setState({
+        data: null,
+        keys: []
+      });
 
       if (series.length == 0) {
-        this.setState({
-          data: null,
-          keys: []
-        });
         return;
       }
 
@@ -48054,13 +48056,15 @@ function (_super) {
           close_hour = _a.close_hour;
 
       var _b = Object(_utils_helpFunc__WEBPACK_IMPORTED_MODULE_3__["process"])(customersSerie, nb_employee, open_hour, close_hour, timezone),
-          data = _b.data,
-          keys = _b.keys;
+          data_1 = _b.data,
+          keys_1 = _b.keys;
 
-      this.setState({
-        data: data,
-        keys: keys
-      });
+      setTimeout(function () {
+        _this.setState({
+          data: data_1,
+          keys: keys_1
+        });
+      }, 500);
     }
   };
 
@@ -48152,32 +48156,6 @@ function (_super) {
 
 /***/ }),
 
-/***/ "./config/constant.ts":
-/*!****************************!*\
-  !*** ./config/constant.ts ***!
-  \****************************/
-/*! exports provided: weekdays, mappingWeekToArrayIndex */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "weekdays", function() { return weekdays; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mappingWeekToArrayIndex", function() { return mappingWeekToArrayIndex; });
-var weekdays = [
-/* 'Sun',  */
-'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-var mappingWeekToArrayIndex = {
-  // Sun: 0,
-  Mon: 0,
-  Tue: 1,
-  Wed: 2,
-  Thu: 3,
-  Fri: 4,
-  Sat: 5
-};
-
-/***/ }),
-
 /***/ "./module.ts":
 /*!*******************!*\
   !*** ./module.ts ***!
@@ -48224,19 +48202,16 @@ var defaults = {
 /*!***************************!*\
   !*** ./utils/helpFunc.ts ***!
   \***************************/
-/*! exports provided: hourToString, process, processData */
+/*! exports provided: hourToString, process */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hourToString", function() { return hourToString; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "process", function() { return process; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "processData", function() { return processData; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _config_constant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config/constant */ "./config/constant.ts");
-/* harmony import */ var date_fns_toDate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns/toDate */ "../node_modules/date-fns/esm/toDate/index.js");
-/* harmony import */ var date_fns_tz__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! date-fns-tz */ "../node_modules/date-fns-tz/esm/index.js");
-
+/* harmony import */ var date_fns_toDate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns/toDate */ "../node_modules/date-fns/esm/toDate/index.js");
+/* harmony import */ var date_fns_tz__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns-tz */ "../node_modules/date-fns-tz/esm/index.js");
 
 
 
@@ -48251,6 +48226,13 @@ var hourToString = function hourToString(start, end) {
 };
 var process = function process(customersSerie, employee, open_hour, close_hour, timeZone) {
   console.log('employee ', employee);
+  var customerArr = customersSerie.fields[0].values.buffer.filter(function (i) {
+    return i > 0;
+  });
+  var empRatio = customerArr.reduce(function (total, i) {
+    return total + i;
+  }, 0) / customerArr.length / employee;
+  console.log('empRatio ', empRatio);
   var hours = hourToString(open_hour, close_hour);
 
   var narr = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])(Array(employee + 1).keys()).slice(1).reverse();
@@ -48265,18 +48247,18 @@ var process = function process(customersSerie, employee, open_hour, close_hour, 
     return obj;
   });
   customersSerie.fields[1].values.buffer.map(function (timestamp, idx) {
-    var zonedDate = Object(date_fns_tz__WEBPACK_IMPORTED_MODULE_3__["utcToZonedTime"])(Object(date_fns_toDate__WEBPACK_IMPORTED_MODULE_2__["default"])(timestamp), timeZone);
-    var dayOfWeek = Object(date_fns_tz__WEBPACK_IMPORTED_MODULE_3__["format"])(zonedDate, 'eee', {
+    var zonedDate = Object(date_fns_tz__WEBPACK_IMPORTED_MODULE_2__["utcToZonedTime"])(Object(date_fns_toDate__WEBPACK_IMPORTED_MODULE_1__["default"])(timestamp), timeZone);
+    var dayOfWeek = Object(date_fns_tz__WEBPACK_IMPORTED_MODULE_2__["format"])(zonedDate, 'eee', {
       timeZone: timeZone
     });
-    var hour = Object(date_fns_tz__WEBPACK_IMPORTED_MODULE_3__["format"])(zonedDate, 'HH', {
+    var hour = Object(date_fns_tz__WEBPACK_IMPORTED_MODULE_2__["format"])(zonedDate, 'HH', {
       timeZone: timeZone
     });
 
     if (dayOfWeek !== 'Sun' && hours.includes(hour)) {
-      var ratio = Math.floor(customersSerie.fields[0].values.buffer[idx] / 5);
+      var ratio = Math.ceil(customersSerie.fields[0].values.buffer[idx] / empRatio);
       console.log('hour ', hour, ' ratio ', ratio);
-      var bound = ratio > employee ? employee - 1 : ratio;
+      var bound = ratio > employee ? employee : ratio;
 
       for (var j = 0; j < bound; j++) {
         template[employee - 1 - j][hour] = 10;
@@ -48286,57 +48268,6 @@ var process = function process(customersSerie, employee, open_hour, close_hour, 
   return {
     data: template,
     keys: hours
-  };
-};
-var processData = function processData(valueArr, timestampArr, timeZone, open_hour, close_hour) {
-  var keepTrackWeek = []; // const timeZone = 'Europe/Berlin';
-
-  var hours = hourToString(open_hour, close_hour);
-  var templateTable = _config_constant__WEBPACK_IMPORTED_MODULE_1__["weekdays"].map(function (weekday) {
-    var obj = {
-      date: weekday
-    };
-    hours.map(function (hour) {
-      obj[hour] = 0;
-    });
-
-    var date = obj.date,
-        rest = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(obj, ["date"]);
-
-    keepTrackWeek.push(rest);
-    return obj;
-  });
-  timestampArr.map(function (timestamp, idx) {
-    var zonedDate = Object(date_fns_tz__WEBPACK_IMPORTED_MODULE_3__["utcToZonedTime"])(Object(date_fns_toDate__WEBPACK_IMPORTED_MODULE_2__["default"])(timestamp), timeZone);
-    var dayOfWeek = Object(date_fns_tz__WEBPACK_IMPORTED_MODULE_3__["format"])(zonedDate, 'eee', {
-      timeZone: timeZone
-    });
-    var hour = Object(date_fns_tz__WEBPACK_IMPORTED_MODULE_3__["format"])(zonedDate, 'HH', {
-      timeZone: timeZone
-    });
-
-    if (dayOfWeek !== 'Sun' && hours.includes(hour)) {
-      templateTable[_config_constant__WEBPACK_IMPORTED_MODULE_1__["mappingWeekToArrayIndex"][dayOfWeek]][hour] += valueArr[idx];
-      keepTrackWeek[_config_constant__WEBPACK_IMPORTED_MODULE_1__["mappingWeekToArrayIndex"][dayOfWeek]][hour] += 1;
-    }
-  });
-
-  var _loop_1 = function _loop_1(i) {
-    hours.map(function (hour) {
-      if (templateTable[i][hour] == 0) {
-        templateTable[i][hour] = null;
-      } else {
-        templateTable[i][hour] = Math.round(templateTable[i][hour] / keepTrackWeek[i][hour] * 100) / 100;
-      }
-    });
-  };
-
-  for (var i = 0; i < 6; i++) {
-    _loop_1(i);
-  }
-
-  return {
-    data: templateTable
   };
 };
 
