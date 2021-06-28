@@ -48077,7 +48077,7 @@ function (_super) {
         keys = _b.keys;
 
     if (!data) {
-      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null);
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, " No Data");
     }
 
     return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
@@ -48225,14 +48225,16 @@ var hourToString = function hourToString(start, end) {
   return arr;
 };
 var process = function process(customersSerie, employee, open_hour, close_hour, timeZone) {
-  console.log('employee ', employee);
+  if (employee == 0) return {
+    data: null,
+    keys: []
+  };
   var customerArr = customersSerie.fields[0].values.buffer.filter(function (i) {
     return i > 0;
   });
   var empRatio = customerArr.reduce(function (total, i) {
     return total + i;
   }, 0) / customerArr.length / employee;
-  console.log('empRatio ', empRatio);
   var hours = hourToString(open_hour, close_hour);
 
   var narr = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])(Array(employee + 1).keys()).slice(1).reverse();
@@ -48256,10 +48258,9 @@ var process = function process(customersSerie, employee, open_hour, close_hour, 
     });
 
     if (dayOfWeek !== 'Sun' && hours.includes(hour)) {
-      var ratio = Math.floor(customersSerie.fields[0].values.buffer[idx] / empRatio);
-      console.log('hour ', hour, ' cus ', customersSerie.fields[0].values.buffer[idx], ' cus/ratio ', ratio);
-      var bound = ratio > employee ? employee : ratio;
-      console.log('bound ', bound);
+      var ratio = Math.floor(customersSerie.fields[0].values.buffer[idx] / empRatio); // console.log('hour ', hour, ' cus ', customersSerie.fields[0].values.buffer[idx], ' cus/ratio ', ratio);
+
+      var bound = ratio > employee ? employee : ratio; // console.log('bound ', bound);
 
       for (var j = 0; j < bound; j++) {
         template[employee - 1 - j][hour] = 10;

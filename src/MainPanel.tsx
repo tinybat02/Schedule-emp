@@ -64,7 +64,7 @@ export class MainPanel extends PureComponent<Props> {
     const { data, keys } = this.state;
 
     if (!data) {
-      return <div />;
+      return <div> No Data</div>;
     }
 
     return (

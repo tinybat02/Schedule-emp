@@ -18,11 +18,10 @@ export const process = (
   close_hour: number,
   timeZone: string
 ) => {
-  console.log('employee ', employee);
+  if (employee == 0) return { data: null, keys: [] };
 
   const customerArr = customersSerie.fields[0].values.buffer.filter((i: number) => i > 0);
   const empRatio = customerArr.reduce((total, i) => total + i, 0) / customerArr.length / employee;
-  console.log('empRatio ', empRatio);
 
   const hours = hourToString(open_hour, close_hour);
   const narr = [...Array(employee + 1).keys()].slice(1).reverse();
@@ -43,9 +42,9 @@ export const process = (
 
     if (dayOfWeek !== 'Sun' && hours.includes(hour)) {
       const ratio = Math.floor(customersSerie.fields[0].values.buffer[idx] / empRatio);
-      console.log('hour ', hour, ' cus ', customersSerie.fields[0].values.buffer[idx], ' cus/ratio ', ratio);
+      // console.log('hour ', hour, ' cus ', customersSerie.fields[0].values.buffer[idx], ' cus/ratio ', ratio);
       const bound = ratio > employee ? employee : ratio;
-      console.log('bound ', bound);
+      // console.log('bound ', bound);
       for (let j = 0; j < bound; j++) {
         template[employee - 1 - j][hour] = 10;
       }
